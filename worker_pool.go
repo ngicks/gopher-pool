@@ -212,6 +212,9 @@ func (p *WorkerPool) Kill() {
 	for _, w := range p.workers {
 		w.Kill()
 	}
+	for _, w := range p.sleepingWorkers {
+		w.Kill()
+	}
 }
 
 // Wait waits for all workers to stop.
