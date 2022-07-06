@@ -1,0 +1,4 @@
+github.com/ngicks/gommon v0.0.3 h1:kL6nRDVYzTv+vJ0gwuI7OC9FVEjYSfEnL/mepO4XjKM=
+github.com/ngicks/gommon v0.0.3/go.mod h1:QK845JnVLei726wHaXMolFUslDeZco2N8PsSv2v7rok=
+github.com/ngicks/type-param-common v0.0.7 h1:XxhB4MsqVA05w0w9jfAXR3ORhxLwgwVVqdigPAP1wOY=
+github.com/ngicks/type-param-common v0.0.7/go.mod h1:W8PCgqsSe/Jl1qyziEjZ2LqspFddNCsHJyZAAU42vvM=
