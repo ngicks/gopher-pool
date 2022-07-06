@@ -25,21 +25,21 @@ type Worker[T any] struct {
 	stopCh         chan struct{}
 	killCh         chan struct{}
 	workCh         <-chan WorkFn
-	onTaskReceived func()
-	onTaskDone     func()
+	onWorkReceived func()
+	onWorkDone     func()
 	cancel         atomicparam.Value[*context.CancelFunc]
 }
 
-func NewWorker[T any](id T, workCh <-chan WorkFn, taskReceived, taskDone func()) (*Worker[T], error) {
+func NewWorker[T any](id T, workCh <-chan WorkFn, onTaskReceived, onWorkDone func()) (*Worker[T], error) {
 	if workCh == nil {
 		return nil, fmt.Errorf("workCh is nil")
 	}
 
-	if taskReceived == nil {
-		taskReceived = func() {}
+	if onTaskReceived == nil {
+		onTaskReceived = func() {}
 	}
-	if taskDone == nil {
-		taskDone = func() {}
+	if onWorkDone == nil {
+		onWorkDone = func() {}
 	}
 
 	workingStateChecker, workingStateInner := state.NewWorkingState()
@@ -54,8 +54,8 @@ func NewWorker[T any](id T, workCh <-chan WorkFn, taskReceived, taskDone func())
 		stopCh:              make(chan struct{}, 1),
 		killCh:              make(chan struct{}),
 		workCh:              workCh,
-		onTaskReceived:      taskReceived,
-		onTaskDone:          taskDone,
+		onWorkReceived:      onTaskReceived,
+		onWorkDone:          onWorkDone,
 		cancel:              atomicparam.NewValue[*context.CancelFunc](),
 	}
 	return worker, nil
@@ -122,8 +122,8 @@ loop:
 					default:
 					}
 
-					w.onTaskReceived()
-					defer w.onTaskDone()
+					w.onWorkReceived()
+					defer w.onWorkDone()
 					workFn(ctx)
 				}()
 			}
@@ -163,6 +163,7 @@ func (w *Worker[T]) Kill() {
 	w.Stop()
 }
 
+// Id is getter of id.
 func (w *Worker[T]) Id() T {
 	return w.id
 }

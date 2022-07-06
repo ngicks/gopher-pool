@@ -19,7 +19,7 @@ var (
 type WorkerConstructor = func(id int, onTaskReceived func(), onTaskDone func()) *Worker[int]
 
 // BuildWorkerConstructor is helper function for WorkerConstructor.
-// taskCh must not be nil. onTaskReceived_, onTaskDone_ can be nil.
+// workCh must not be nil. onTaskReceived_, onTaskDone_ can be nil.
 func BuildWorkerConstructor(workCh <-chan WorkFn, onTaskReceived_ func(), onTaskDone_ func()) WorkerConstructor {
 	return func(id int, onTaskReceived__ func(), onTaskDone__ func()) *Worker[int] {
 		onTaskReceived := func() {
@@ -193,7 +193,7 @@ func (p *WorkerPool) Remove(delta uint32) (alive int, sleeping int) {
 }
 
 // Len returns number of workers.
-// alive is active worker. sleeping is worker removed by Remove while still working on its job.
+// alive is running workers. sleeping is workers removed by Remove while still working on its job.
 func (p *WorkerPool) Len() (alive int, sleeping int) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -218,7 +218,7 @@ func (p *WorkerPool) Kill() {
 }
 
 // Wait waits for all workers to stop.
-// Calling this without sleeping or removing all worker may block forever.
+// Calling this without Kill and/or Remove all workers may block forever.
 func (p *WorkerPool) Wait() {
 	p.wg.Wait()
 }

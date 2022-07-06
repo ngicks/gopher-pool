@@ -2,6 +2,8 @@ package gopherpool
 
 import "log"
 
+// Option is an option that changes WoerkerPool instance.
+// This can be used in NewWorkerPool.
 type Option = func(w *WorkerPool) *WorkerPool
 
 // SetDefaultAbnormalReturnCb is an Option that
